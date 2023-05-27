@@ -10,9 +10,6 @@ dependencies:
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
-  typescript:
-    specifier: ^5.0.4
-    version: 5.0.4
   typescript-rtti:
     specifier: ^0.8.3
     version: 0.8.3(reflect-metadata@0.1.13)(typescript@5.0.4)
@@ -21,6 +18,9 @@ devDependencies:
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.2.3)(typescript@5.0.4)
+  typescript:
+    specifier: ^5.0.4
+    version: 5.0.4
 
 packages:
 
