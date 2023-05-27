@@ -1,14 +1,23 @@
 import { REST, Routes } from "discord.js";
-import { Command } from "./Command";
-import { findInterfaceHeritors } from "../reflections/inheritorReflector";
-import { ICommand } from './ICommand';
 
 export class CommandRegister {
-    private commands: Command[] = [];
+    private commands: any[];
+    private clientId: string;
     private rest: REST;
 
-    constructor(token: string) {
+    constructor(token: string, clientId: string, commands?: any[]) {
+        this.commands = commands || [];
+        this.clientId = clientId;
         this.rest = new REST({ version: '10' }).setToken(token);
     }
-    
+
+    async registerCommands() {
+        await this.rest.put(Routes.applicationCommands(this.clientId), {
+            body: this.commands
+        });
+    }
+
+    getCommands(): any[] {
+        return this.commands;
+    }
 }
