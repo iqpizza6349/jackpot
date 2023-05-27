@@ -1,10 +1,7 @@
-import { REST, Routes } from 'discord.js';
 import { ICommand } from './ICommand';
-import { Cmd } from './decorator/cmd';
 
-@Cmd
 export class Ping implements ICommand {
-
+    cmd: boolean = true;
     name(): string {
         return "ping";
     }
