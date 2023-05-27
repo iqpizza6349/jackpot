@@ -13,4 +13,14 @@ export class InteractionRegister {
             console.log(`Logged in as ${this._client.user?.tag}`);
         });
     }
+
+    addSlashCommand() {
+        this._client.on('interactionCreate', async interation => {
+            if (!interation.isChatInputCommand()) {
+                return;
+            }
+
+            // TODO: do logic each command
+        });
+    }
 }
