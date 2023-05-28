@@ -1,7 +1,8 @@
 import mongoose, { Model } from "mongoose";
 
 interface GameSchema {
-    name: string
+    name: string,
+    open: boolean
 }
 
 interface GameModel extends Model<GameSchema> {}
@@ -11,7 +12,8 @@ interface GameModel extends Model<GameSchema> {}
  * There's only one field, `name` (a.k.a gamename)
  */
 const gameSchema = new mongoose.Schema<GameSchema, GameModel>({
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    open: { type: Boolean, default: true }
 });
 
 const Game = mongoose.model<GameSchema, GameModel>("Game", gameSchema);
