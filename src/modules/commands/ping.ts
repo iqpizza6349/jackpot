@@ -11,6 +11,10 @@ export class Ping implements ICommand {
         return "현재 서버와의 연결까지 걸리는 딜레이를 조회합니다.";
     }
 
+    options(): any[] {
+        return [];
+    }
+
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
         if (interation.commandName === this.name()) {
             const user = interation.user;
