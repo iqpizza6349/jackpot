@@ -1,4 +1,5 @@
 import { Client } from "discord.js";
+import { ICommand } from "../commands/ICommand";
 
 export class InteractionRegister {
 
@@ -14,13 +15,16 @@ export class InteractionRegister {
         });
     }
 
-    addSlashCommand() {
+    addSlashCommands(commands: ICommand[]) {
         this._client.on('interactionCreate', async interation => {
             if (!interation.isChatInputCommand()) {
                 return;
             }
 
-            // TODO: do logic each command
+            commands.map(async (cmd) => {
+                console.log(typeof(cmd.action));
+                await cmd.action(interation);
+            });
         });
     }
 }

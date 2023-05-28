@@ -7,6 +7,6 @@ export function findCommands(): any[] {
     });
 }
 
-function findDynamicCommands(): ICommand[] {
+export function findDynamicCommands(): ICommand[] {
     return discoverUnusedClasses(__dirname);
 }

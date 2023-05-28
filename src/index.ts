@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from "discord.js";
 import { config } from 'dotenv';
 import { InteractionRegister } from "./modules/interactions/interactionRegister";
 import { CommandRegister } from "./modules/commands/commandRegister";
-import { findCommands } from "./modules/commands/commandLoader";
+import { findCommands, findDynamicCommands } from "./modules/commands/commandLoader";
 
 config();   // config '.env'
 
@@ -13,11 +13,15 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const interactionManager = new InteractionRegister(client);
 
 // dynamic find commands and register it
-const dynamicCommands = findCommands();
-const commandRegister = new CommandRegister(TOKEN, CLIENT_ID, dynamicCommands);
+const dynamicCommands = findDynamicCommands();
+const commandList = findCommands();
+const commandRegister = new CommandRegister(TOKEN, CLIENT_ID, commandList);
 commandRegister.registerCommands();
 
 // add interactions to work in bot
 interactionManager.addReadyInteraction();
+
+// add commands to interaction action
+interactionManager.addSlashCommands(dynamicCommands);
 
 client.login(TOKEN);
