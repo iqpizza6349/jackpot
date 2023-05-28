@@ -22,7 +22,6 @@ export class InteractionRegister {
             }
 
             commands.map(async (cmd) => {
-                console.log(typeof(cmd.action));
                 await cmd.action(interation);
             });
         });
