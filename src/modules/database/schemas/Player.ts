@@ -15,7 +15,7 @@ interface PlayerModel extends Model<PlayerSchema> {}
 const playerSchema = new mongoose.Schema<PlayerSchema, PlayerModel>({
     _id: { type: Number, required: true },
     amount: { type: Number, required: true, default: 1000 },
-    history: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Record' }]
+    history: [{ type: mongoose.Schema.Types.ObjectId, ref: "Record" }]
 });
 const Player = mongoose.model<PlayerSchema, PlayerModel>("Player", playerSchema);
 

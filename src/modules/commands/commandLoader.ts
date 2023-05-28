@@ -1,5 +1,5 @@
 import { discoverUnusedClasses } from "../reflections/inheritorReflector";
-import { ICommand } from './ICommand';
+import { ICommand } from "./ICommand";
 
 export function findCommands(): any[] {
     return findDynamicCommands().map((v) => {

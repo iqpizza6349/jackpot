@@ -1,5 +1,5 @@
-import { CacheType, CommandInteraction } from 'discord.js';
-import { ICommand } from './ICommand';
+import { CacheType, CommandInteraction } from "discord.js";
+import { ICommand } from "./ICommand";
 
 export class Ping implements ICommand {
     cmd: boolean = true;

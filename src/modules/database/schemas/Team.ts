@@ -14,7 +14,7 @@ interface TeamModel extends Model<TeamSchema> {}
  */
 const teamSchema = new mongoose.Schema<TeamSchema, TeamModel>({
     name: { type: String, required: true },
-    game: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: true }
+    game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true }
 });
 const Team = mongoose.model<TeamSchema, TeamModel>("Team", teamSchema);
 

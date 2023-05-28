@@ -10,13 +10,13 @@ export class InteractionRegister {
     }
 
     addReadyInteraction() {
-        this._client.on('ready', () => {
+        this._client.on("ready", () => {
             console.log(`Logged in as ${this._client.user?.tag}`);
         });
     }
 
     addSlashCommands(commands: ICommand[]) {
-        this._client.on('interactionCreate', async interation => {
+        this._client.on("interactionCreate", async interation => {
             if (!interation.isChatInputCommand()) {
                 return;
             }

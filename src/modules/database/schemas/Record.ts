@@ -13,8 +13,8 @@ interface RecordModel extends Model<RecordSchema> {}
  * saves `gamename`, `team`(which bets), `amount`(how much did bet)
  */
 const recordSchema = new mongoose.Schema<RecordSchema, RecordModel>({
-    game: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: true },
-    team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: true },
+    game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
+    team: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required: true },
     amount: { type: Number, required: true }
 });
 const Record = mongoose.model<RecordSchema, RecordModel>("Record", recordSchema);

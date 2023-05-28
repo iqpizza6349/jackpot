@@ -8,7 +8,7 @@ export class CommandRegister {
     constructor(token: string, clientId: string, commands?: any[]) {
         this.commands = commands || [];
         this.clientId = clientId;
-        this.rest = new REST({ version: '10' }).setToken(token);
+        this.rest = new REST({ version: "10" }).setToken(token);
     }
 
     async registerCommands() {
