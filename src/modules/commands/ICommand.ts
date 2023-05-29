@@ -5,5 +5,6 @@ export interface ICommand {
     name(): string;
     description(): string;
     options(): any[];
+    permissions(): bigint[];
     action(interation: CommandInteraction<CacheType>): Promise<void>;
 }

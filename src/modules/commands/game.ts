@@ -1,4 +1,4 @@
-import { CommandInteraction, CacheType, ApplicationCommandOptionType } from "discord.js";
+import { CommandInteraction, CacheType, ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
 import { Game } from "../database/schemas/Game";
 
@@ -23,9 +23,12 @@ export class PlayGame implements ICommand {
         ];
     }
 
+    permissions(): bigint[] {
+        return [PermissionFlagsBits.Administrator];
+    }
+
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
         if (interation.commandName === this.name()) {
-            // TODO: check is interaction user is manager
             const gameName = interation.options.get("토토명")?.value as string;
             const isExists = await this.existsGame(gameName);
             if (!isExists) {

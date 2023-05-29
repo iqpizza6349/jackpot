@@ -15,6 +15,10 @@ export class Ping implements ICommand {
         return [];
     }
 
+    permissions(): bigint[] {
+        return [];
+    }
+
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
         if (interation.commandName === this.name()) {
             const user = interation.user;
