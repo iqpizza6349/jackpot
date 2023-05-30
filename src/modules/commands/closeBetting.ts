@@ -16,11 +16,28 @@ export class CloseBetting implements ICommand {
         return [];
     }
 
-    permission(): bigint {
+    permission(): bigint | undefined {
         return PermissionFlagsBits.Administrator;
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
-        return;
+        if (interation.commandName !== this.name()) {
+            return;
+        }
+
+        const currentGame = await this.findOpenedGame();
+        if (currentGame === null) {
+            interation.reply({ content: "현재 진행 중인 게임" })
+            return;
+        }
+
+        currentGame.open = false;
+        currentGame.save();
+        await interation.channel?.send(`@everyone \`${currentGame?.name}\` 토토판은 베팅이 종료되었습니다.\n더 이상 배팅할 수 없습니다.`);
+        await interation.reply({ content: "배팅을 더 이상 할 수 없게 하였습니다.", ephemeral: true });
+    }
+
+    private async findOpenedGame() {
+        return await Game.findOne({ open: true });
     }
 }
