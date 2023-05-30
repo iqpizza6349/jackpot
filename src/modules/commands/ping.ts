@@ -29,7 +29,7 @@ export class Ping implements ICommand {
         const reply = await interation.fetchReply();
         const ping  = reply.createdTimestamp - interation.createdTimestamp;
         await interation.editReply(
-            `Pong! ${user.username}가 채널에 접근하기 까지 걸린 시간: ${ping}ms`
+            `Pong! ${user.username}이/가 채널에 접근하기 까지 걸린 시간: ${ping}ms`
         );
     }
 }
