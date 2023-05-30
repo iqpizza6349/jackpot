@@ -52,7 +52,7 @@ export class Team implements ICommand {
         const method = interation.options.get("행위")?.value as string;
         const teamName = interation.options.get("팀명")?.value as string;
         const currentGame = await this.findCurrentOpenedGame();
-        if (currentGame === undefined || currentGame === null) {
+        if (currentGame === null) {
             interation.reply({ content: "현재 개장된 토토가 없습니다.", ephemeral: true });
             return;
         }
@@ -97,7 +97,7 @@ export class Team implements ICommand {
 
     private async findCurrentOpenedGame() {
         const game = await Game.find({ open: true });
-        return (game.length === 0) ? undefined : game[0];
+        return (game.length === 0) ? null : game[0];
     }
 
     private async findTeamByName(id: any, name: string) {
