@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
 import { ICommand } from "../commands/ICommand";
+import { register } from "./playerRegister";
 
 export class InteractionRegister {
 
@@ -21,6 +22,7 @@ export class InteractionRegister {
                 return;
             }
 
+            await register(Number(interation.user.id));
             commands.map(async (cmd) => {
                 await cmd.action(interation);
             });
