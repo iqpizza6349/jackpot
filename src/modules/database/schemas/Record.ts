@@ -1,9 +1,10 @@
 import mongoose, { Model } from "mongoose";
 
-interface RecordSchema {
+export interface RecordSchema {
     game: any,
     team: any,
-    amount: number
+    amount: number,
+    won: boolean
 }
 
 interface RecordModel extends Model<RecordSchema> {}
@@ -15,7 +16,8 @@ interface RecordModel extends Model<RecordSchema> {}
 const recordSchema = new mongoose.Schema<RecordSchema, RecordModel>({
     game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required: true },
-    amount: { type: Number, required: true }
+    amount: { type: Number, required: true },
+    won: { type: Boolean, default: null }
 });
 const Record = mongoose.model<RecordSchema, RecordModel>("Record", recordSchema);
 
