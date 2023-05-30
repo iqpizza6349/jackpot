@@ -23,25 +23,27 @@ export class PlayGame implements ICommand {
         ];
     }
 
-    permissions(): bigint[] {
-        return [PermissionFlagsBits.Administrator];
+    permission(): bigint {
+        return PermissionFlagsBits.Administrator;
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
-        if (interation.commandName === this.name()) {
-            const gameName = interation.options.get("토토명")?.value as string;
-            const isExists = await this.existsGame(gameName);
-            if (!isExists) {
-                await interation.reply({ content: "해당 토토명으로 이미 개장되었습니다.", ephemeral: true });
-                return;
-            }
-
-            await Game.create({
-                name: gameName
-            });
-            await interation.channel?.send(`@everyone \`${gameName}\` 토토판이 개장되었습니다!`);
-            await interation.reply({ content: this.messageFormat(gameName), ephemeral: true });
+        if (interation.commandName !== this.name()) {
+            return;
         }
+        
+        const gameName = interation.options.get("토토명")?.value as string;
+        const isExists = await this.existsGame(gameName);
+        if (!isExists) {
+            await interation.reply({ content: "해당 토토명으로 이미 개장되었습니다.", ephemeral: true });
+            return;
+        }
+
+        await Game.create({
+            name: gameName
+        });
+        await interation.channel?.send(`@everyone \`${gameName}\` 토토판이 개장되었습니다!`);
+        await interation.reply({ content: this.messageFormat(gameName), ephemeral: true });
     }
 
     async existsGame(gameName: string): Promise<boolean> {

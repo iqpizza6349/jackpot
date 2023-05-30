@@ -15,19 +15,21 @@ export class Ping implements ICommand {
         return [];
     }
 
-    permissions(): bigint[] {
-        return [];
+    permission(): bigint {
+        return BigInt(0);
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
-        if (interation.commandName === this.name()) {
-            const user = interation.user;
-            await interation.deferReply();
-            const reply = await interation.fetchReply();
-            const ping  = reply.createdTimestamp - interation.createdTimestamp;
-            await interation.editReply(
-                `Pong! ${user.username}가 채널에 접근하기 까지 걸린 시간: ${ping}ms | websocket으로 접근하기 까지 걸린 시간: ${user.client.ws.ping}ms`
-            );
+        if (interation.commandName !== this.name()) {
+            return;
         }
+
+        const user = interation.user;
+        await interation.deferReply();
+        const reply = await interation.fetchReply();
+        const ping  = reply.createdTimestamp - interation.createdTimestamp;
+        await interation.editReply(
+            `Pong! ${user.username}가 채널에 접근하기 까지 걸린 시간: ${ping}ms`
+        );
     }
 }
