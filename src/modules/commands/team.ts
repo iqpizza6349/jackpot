@@ -59,20 +59,12 @@ export class Team implements ICommand {
         
         const result = await this.team(method, teamName, currentGame);
         if (method === "rm") {
-            if (!result) {
-                interation.reply({ content: `삭제할 팀을 찾지 못하였습니다.`, ephemeral: true });
-                return;
-            }
-
-            interation.reply({ content: `${teamName}(팀)을 토토에서 삭제하였습니다.`, ephemeral: true });
+            const content = (result) ? `${teamName}(팀)을 토토에서 삭제하였습니다.` : `삭제할 팀을 찾지 못하였습니다.`;
+            interation.reply({ content, ephemeral: true });
         }
         else {
-            if (!result) {
-                interation.reply({ content: `${teamName}은 이미 존재합니다.`, ephemeral: true });
-                return;
-            }
-
-            interation.reply({ content: `${teamName}(팀)을 토토에 추가하였습니다.`, ephemeral: true });
+            const content = (result) ? `${teamName}(팀)을 토토에 추가하였습니다.` : `${teamName}은 이미 존재합니다.`;
+            interation.reply({ content, ephemeral: true });
         }
     }
 
