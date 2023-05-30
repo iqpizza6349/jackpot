@@ -38,6 +38,12 @@ export class PlayGame implements ICommand {
             await interation.reply({ content: "해당 토토명으로 이미 개장되었습니다.", ephemeral: true });
             return;
         }
+        
+        const hasOpenedGame = await this.existsCurrentGame();
+        if (!hasOpenedGame) {
+            await interation.reply({ content: "개장되어 진행 중인 게임이 이미 있습니다.", ephemeral: true });
+            return;
+        }
 
         await Game.create({
             name: gameName
@@ -51,6 +57,10 @@ export class PlayGame implements ICommand {
         return (game.length === 0);
     }
 
+    async existsCurrentGame(): Promise<boolean> {
+        const game = await Game.find({ open: true });
+        return (game.length === 0);     // if length is 0, means there is no currently opened game
+    }
 
     private messageFormat(gameName: string): string {
         return `토토 \`${gameName}\`판이 개장되었습니다!`;
