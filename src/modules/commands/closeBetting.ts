@@ -1,5 +1,6 @@
 import { CommandInteraction, CacheType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
+import { Game } from "../database/schemas/Game";
 
 export class CloseBetting implements ICommand {
     cmd: boolean = true;

@@ -40,7 +40,7 @@ export class Team implements ICommand {
         ];
     }
 
-    permission(): bigint {
+    permission(): bigint | undefined {
         return PermissionFlagsBits.Administrator;
     }
 
@@ -96,7 +96,7 @@ export class Team implements ICommand {
     }
 
     private async findCurrentOpenedGame() {
-        const game = await Game.find({ open: true });
+        const game = await Game.find({ finish: false });
         return (game.length === 0) ? null : game[0];
     }
 

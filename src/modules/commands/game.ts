@@ -23,7 +23,7 @@ export class PlayGame implements ICommand {
         ];
     }
 
-    permission(): bigint {
+    permission(): bigint | undefined {
         return PermissionFlagsBits.Administrator;
     }
 
@@ -58,7 +58,7 @@ export class PlayGame implements ICommand {
     }
 
     async existsCurrentGame(): Promise<boolean> {
-        const game = await Game.find({ open: true });
+        const game = await Game.find({ finish: false });
         return (game.length === 0);     // if length is 0, means there is no currently opened game
     }
 

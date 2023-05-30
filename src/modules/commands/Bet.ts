@@ -34,8 +34,8 @@ export class Bet implements ICommand {
         ];
     }
 
-    permission(): bigint {
-        return BigInt(0);
+    permission(): bigint | undefined {
+        return undefined;
     }
     
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
@@ -91,7 +91,7 @@ export class Bet implements ICommand {
     }
 
     private async findOpenedGame() {
-        return await Game.findOne({ open: true });
+        return await Game.findOne({ open: true, finish: false });
     }
 
     private async findPlayerById(id: number) {

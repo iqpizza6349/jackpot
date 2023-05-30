@@ -15,8 +15,8 @@ export class Ping implements ICommand {
         return [];
     }
 
-    permission(): bigint {
-        return BigInt(0);
+    permission(): bigint | undefined {
+        return undefined;
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
