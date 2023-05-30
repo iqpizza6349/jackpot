@@ -1,5 +1,7 @@
 import { CommandInteraction, CacheType, ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
+import { GameTeam } from "../database/schemas/GameTeam";
+import { Game } from "../database/schemas/Game";
 
 export class Team implements ICommand {
     cmd: boolean = true;
@@ -48,9 +50,65 @@ export class Team implements ICommand {
         }
 
         const method = interation.options.get("행위")?.value as string;
-        // 행위가 'add'라면 팀원을 추가하고, 'rm'이라면 삭제한다.
-        // TODO: if `method` is 'add', add team in game collection,
-        //       if is 'rm', remove team in game collection
+        const teamName = interation.options.get("팀명")?.value as string;
+        const currentGame = await this.findCurrentOpenedGame();
+        if (currentGame === undefined || currentGame === null) {
+            interation.reply({ content: "현재 개장된 토토가 없습니다.", ephemeral: true });
+            return;
+        }
+        
+        const result = await this.team(method, teamName, currentGame);
+        if (method === "rm") {
+            if (!result) {
+                interation.reply({ content: `삭제할 팀을 찾지 못하였습니다.`, ephemeral: true });
+                return;
+            }
+
+            interation.reply({ content: `${teamName}(팀)을 토토에서 삭제하였습니다.`, ephemeral: true });
+        }
+        else {
+            if (!result) {
+                interation.reply({ content: `${teamName}은 이미 존재합니다.`, ephemeral: true });
+                return;
+            }
+
+            interation.reply({ content: `${teamName}(팀)을 토토에 추가하였습니다.`, ephemeral: true });
+        }
     }
-    
+
+    private async team(method: string, teamName: string, currentGame: any)
+                : Promise<boolean> {
+        // add or remove, whatever we do. we must check if game must not have
+        // duplicated name of teams
+        const team = await this.findTeamByName(currentGame._id, teamName);
+        if (method === "rm") {
+            if (team === null) {
+                return false;
+            }
+            
+            await GameTeam.deleteOne({ game: team?.game, name: team?.name });
+            return true;
+        }
+        else {
+            // if `method` is add
+            if (team !== null) {
+                return false;
+            }
+
+            await GameTeam.create({
+                name: teamName,
+                game: currentGame._id
+            });
+            return true;
+        }
+    }
+
+    private async findCurrentOpenedGame() {
+        const game = await Game.find({ open: true });
+        return (game.length === 0) ? undefined : game[0];
+    }
+
+    private async findTeamByName(id: any, name: string) {
+        return await GameTeam.findOne({ game: id, name });
+    }
 }
