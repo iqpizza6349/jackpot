@@ -22,7 +22,7 @@ export class InteractionRegister {
                 return;
             }
 
-            await register(Number(interation.user.id));
+            await register(interation.user.id);
             commands.map(async (cmd) => {
                 await cmd.action(interation);
             });

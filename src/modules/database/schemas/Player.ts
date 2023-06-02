@@ -1,7 +1,7 @@
 import mongoose, { Model } from "mongoose";
 
 interface PlayerSchema {
-    _id: number,
+    _id: string,
     amount: number,
     history: []
 }
@@ -13,7 +13,7 @@ interface PlayerModel extends Model<PlayerSchema> {}
  * player has `amount`(current money), `history`(betting history).
  */
 const playerSchema = new mongoose.Schema<PlayerSchema, PlayerModel>({
-    _id: { type: Number, required: true },
+    _id: { type: String, required: true },
     amount: { type: Number, required: true, default: 1000 },
     history: [{ type: mongoose.Schema.Types.ObjectId, ref: "Record" }]
 });

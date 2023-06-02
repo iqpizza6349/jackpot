@@ -3,7 +3,7 @@ import { Player } from "../database/schemas/Player";
 /**
  * register user when user send slash-command first time
  */
-export async function register(id: number) {
+export async function register(id: string) {
     const player = await findPlayerById(id);
     if (player !== null) {
         return;
@@ -14,7 +14,7 @@ export async function register(id: number) {
     });
 }
 
-async function findPlayerById(id: number) {
+async function findPlayerById(id: string) {
     return await Player.findById(id);
 }
 
