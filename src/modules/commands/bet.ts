@@ -75,6 +75,7 @@ export class Bet implements ICommand {
             return;
         }
     
+        await team.updateOne({ count: team.count + 1 });
         const record = await Record.create({
             game: openedGame._id,
             team: team._id,
