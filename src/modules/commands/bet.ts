@@ -55,7 +55,7 @@ export class Bet implements ICommand {
         }
 
         const user = interation.user;
-        const userId = Number(user.id);
+        const userId = user.id;
         let player = await this.findPlayerById(userId);
         if (player === null) {
             await interation.reply(`<@${userId}> 당신 누구야. 등록 안하고 어떻게 명령했어`);
@@ -94,7 +94,7 @@ export class Bet implements ICommand {
         return await Game.findOne({ open: true, finish: false });
     }
 
-    private async findPlayerById(id: number) {
+    private async findPlayerById(id: string) {
         return await Player.findById(id).populate({
             path: "history",
             populate: [
