@@ -2,7 +2,8 @@ import mongoose, { Model } from "mongoose";
 
 interface TeamSchema {
     name: string,
-    game: any
+    game: any,
+    count: number
 }
 
 interface TeamModel extends Model<TeamSchema> {}
@@ -14,7 +15,8 @@ interface TeamModel extends Model<TeamSchema> {}
  */
 const teamSchema = new mongoose.Schema<TeamSchema, TeamModel>({
     name: { type: String, required: true },
-    game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true }
+    game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
+    count: { type: Number, required: true, default: 0 }
 });
 const GameTeam = mongoose.model<TeamSchema, TeamModel>("Team", teamSchema);
 
