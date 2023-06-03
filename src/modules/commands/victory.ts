@@ -1,5 +1,9 @@
 import { CommandInteraction, CacheType, ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
+import { Game } from "../database/schemas/Game";
+import { GameTeam } from "../database/schemas/GameTeam";
+import { Player } from "../database/schemas/Player";
+import { Record } from "../database/schemas/Record";
 
 export class Victory implements ICommand {
     cmd: boolean = true;

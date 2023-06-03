@@ -1,4 +1,4 @@
-import { CommandInteraction, CacheType, EmbedBuilder, Client } from "discord.js";
+import { CommandInteraction, CacheType, EmbedBuilder } from "discord.js";
 import { ICommand } from "./ICommand";
 import { Player } from "../database/schemas/Player";
 
