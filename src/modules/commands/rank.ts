@@ -32,14 +32,15 @@ export class Rank implements ICommand {
         }
         
         const rankers = await this.findTop10Players();
-        const self = await this.selfRank(Number(interation.user.id));
+        const self = await Player.findById(interation.user.id)
+        const selfRank = await this.selfRank(self?.amount as number);
 
         const embed = new EmbedBuilder().setColor(0x0099FF)
                         .setTitle("토토 랭킹")
                         .setDescription("모든 플레이어별 소지금 랭킹")
-                        .addFields(this.addRankers(interation.client, rankers))
+                        .addFields(this.addRankers(rankers))
                         .setFooter({
-                            text: `${interation.user.username}님은 ${self + 1}위입니다.`
+                            text: `${interation.user.username}님은 ${selfRank + 1}위입니다.`
                         });
         interation.reply({ embeds: [embed] });
     }
@@ -53,11 +54,11 @@ export class Rank implements ICommand {
                             .sort({ amount: -1 });
     }
 
-    private addRankers(client: Client<true>, rankers: any[]) {
+    private addRankers(rankers: any[]) {
         return rankers.map((v, i) => {
             return { 
                 name: `${i + 1}위`,
-                value: `${client.users.cache.get(v._id)?.username}`
+                value: `<@${v._id}>`
             };
         });
     }
