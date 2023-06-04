@@ -38,12 +38,10 @@ export class Victory implements ICommand {
         
         const currentGame = await this.findOpenedGame();
         if (currentGame === null) {
-            // 현재 진행 중인 게임을 찾지 못함
             interation.reply({ content: "현재 진행 중인 게임을 찾지 못하였습니다.", ephemeral: true });
             return;
         }
         else if (currentGame.open === true) {
-            // 배팅 중인 게임
             interation.reply({ content: "현재 배팅 중인 게임입니다. /배팅중지 로 먼저 배팅을 중지해주세요!", ephemeral: true });
             return;
         }
@@ -52,7 +50,6 @@ export class Victory implements ICommand {
         const allGameTeam = await this.findAllGameTeam(currentGame._id);
         const isExists: boolean = allGameTeam.filter((g) => g.name === winningTeam).length !== 0;
         if (!isExists) {
-            // '승리한팀'이 현재 게임에 존재하지 않음
             interation.reply({ content: `현재 게임에는 ${winningTeam}(팀)이 존재하지 않습니다.`, ephemeral: true });
             return;
         }
@@ -60,7 +57,6 @@ export class Victory implements ICommand {
         const bettingAmount = await this.findAllPlayers(currentGame._id, winningTeam);
         await currentGame.updateOne({ finish: true });
         const bettings = bettingAmount as Map<string, number>;
-        // send 'current game has finished... which team has win..?' embed message
         const allAmount = Array.from(bettings.values()).reduce((prev, cur) => {
             return Number(prev) + Number(cur);
         }, 0);
