@@ -101,13 +101,11 @@ export class Victory implements ICommand {
                                 const selfTeamAllBets = bettingAmount.get(selfTeam);
                                 const selfStake = (selfBet / selfTeamAllBets);    // 지분율
                                 let earnMoney = 0;
-                                console.log("여기까지 닿기는 해?");
                                 for (let other of bettingAmount.keys()) {
                                     if (other === selfTeam) {
                                         continue;
                                     }
 
-                                    console.log("계산 중!");
                                     earnMoney += bettingAmount.get(other) * selfStake;
                                 }
                                 const amount = selfBet + earnMoney;
@@ -118,9 +116,6 @@ export class Victory implements ICommand {
                                     { $set: { won: true } }
                                 );
                             }
-                        })
-                        .catch((error) => {
-                            console.error(error);
                         });
     }
 
