@@ -83,7 +83,7 @@ export class Bet implements ICommand {
             const previousAmount = record.amount;
             await record.updateOne({ team: team._id, amount: bettingAmount });
             await player.updateOne({ amount: player.amount - bettingAmount });
-            interation.reply(
+            await interation.reply(
                 {
                     content: `배팅을 ${previousTeam}, ${previousAmount}원 -> ${team.name}, ${bettingAmount}원으로 변경하셨습니다.`,
                     ephemeral: true
@@ -106,10 +106,10 @@ export class Bet implements ICommand {
         const avatar = (user.avatarURL() === null) ? undefined : user.avatarURL()?.toString();
         const embedProfile = this.createEmbed(user.username, avatar, player?.history, player?.amount);
         if (interation.replied) {
-            interation.reply({ embeds: [embedProfile] });
+            await interation.channel?.send({ embeds: [embedProfile] });
         }
         else {
-            interation.channel?.send({ embeds: [embedProfile] });
+            await interation.reply({ embeds: [embedProfile] });
         }
     }
 
