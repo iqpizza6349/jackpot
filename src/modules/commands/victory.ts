@@ -24,7 +24,7 @@ export class Victory implements ICommand {
                 type: ApplicationCommandOptionType.String,
                 required: true
             }
-        ]
+        ];
     }
 
     permission(): bigint | undefined {
@@ -44,16 +44,16 @@ export class Victory implements ICommand {
 
         const winningTeam = interation.options.get("승리한팀")?.value as string;
         const allGameTeam = await this.findAllGameTeam(currentGame._id);
-        const isExists: boolean = allGameTeam.filter((g) => g.name ===  winningTeam).length !== 0;
+        const isExists: boolean = allGameTeam.filter((g) => g.name === winningTeam).length !== 0;
         if (!isExists) {
             // '승리한팀'이 현재 게임에 존재하지 않음
             return;
         }
 
-        // 찾고 계산하고, 처리하고 response 끝
         await this.findAllPlayers(currentGame._id, winningTeam);
 
-        // 3. 해당 게임 종료
+        await currentGame.updateOne({ finish: true });
+        // send 'current game has finished... which team has win..?' embed message
         interation.reply({ content: 'nothing', ephemeral: true });
     }
 
@@ -78,19 +78,15 @@ export class Victory implements ICommand {
                                 return;
                             }
 
-
                             const bettingAmount = new Map();
                             this.calculateEachTeamBetting(gameId, players, 
                                         bettingAmount);
-                            console.log(bettingAmount);
                             for (let player of players) {
                                 const gameRecord = this.findGameRecords(gameId, player.history)[0];
                                 if(gameRecord.index === -1) {
                                     continue;
                                 }
 
-                                // 100 + (200 * ($지분 * 0.01))
-                                // 200 + (100 * ())
                                 const selfRecord = gameRecord.record as any;
                                 const selfTeam = selfRecord.team.name;
                                 if (winningTeam !== selfTeam) {
