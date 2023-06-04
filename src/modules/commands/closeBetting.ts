@@ -27,7 +27,11 @@ export class CloseBetting implements ICommand {
 
         const currentGame = await this.findOpenedGame();
         if (currentGame === null) {
-            interation.reply({ content: "현재 진행 중인 게임" })
+            interation.reply({ content: "현재 진행 중인 게임을 찾지 못하였습니다.", ephemeral: true });
+            return;
+        }
+        else if (currentGame.open === false) {
+            interation.reply({ content: "이미 배팅이 중지되었습니다.", ephemeral: true });
             return;
         }
 
@@ -38,6 +42,6 @@ export class CloseBetting implements ICommand {
     }
 
     private async findOpenedGame() {
-        return await Game.findOne({ open: true });
+        return await Game.findOne({ finish: false });
     }
 }
