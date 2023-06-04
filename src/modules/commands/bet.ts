@@ -58,6 +58,7 @@ export class Bet implements ICommand {
         const userId = user.id;
         let player = await this.findPlayerById(userId);
         if (player === null) {
+            // it could be not happen
             await interation.reply(`<@${userId}> 당신 누구야. 등록 안하고 어떻게 명령했어`);
             return;
         }
