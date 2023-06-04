@@ -76,8 +76,9 @@ export class Bet implements ICommand {
             return;
         }
 
-        let record = await this.findBettingRecord(player._id);
-        if (record !== null) {
+        let record = await this.findBettingRecord(player._id, openedGame._id);
+        if (record.length !== 0) {
+            record = record[0];
             const previousTeam = record.team.name;
             const previousAmount = record.amount;
             await record.updateOne({ team: team._id, amount: bettingAmount });
@@ -86,7 +87,7 @@ export class Bet implements ICommand {
                     content: `배팅을 ${previousTeam}, ${previousAmount}원 -> ${team.name}, ${bettingAmount}원으로 변경하셨습니다.`,
                     ephemeral: true
                 }
-            )
+            );
         }
         else {
             await team.updateOne({ count: team.count + 1 });
@@ -103,7 +104,12 @@ export class Bet implements ICommand {
         player = await this.findPlayerById(userId);
         const avatar = (user.avatarURL() === null) ? undefined : user.avatarURL()?.toString();
         const embedProfile = this.createEmbed(user.username, avatar, player?.history, player?.amount);
-        interation.reply({ embeds: [embedProfile] });
+        if (interation.replied) {
+            interation.reply({ embeds: [embedProfile] });
+        }
+        else {
+            interation.channel?.send({ embeds: [embedProfile] });
+        }
     }
 
     private async findOpenedGame() {
@@ -135,7 +141,7 @@ export class Bet implements ICommand {
         );
         const record = this.createGameField(history);
         for (let i = 0; i < record.length; i++) {
-            embed = embed.addFields(record[i]);
+            embed.addFields(record[i]);
         }
 
         return embed.setTimestamp();
@@ -154,7 +160,7 @@ export class Bet implements ICommand {
         }
         const record = history.map((v) => {
             return { 
-                name: (v.won === null) ? "아직 결과가 나오지 않았습니다." : v.won, 
+                name: (v.won === null) ? "아직 결과가 나오지 않았습니다." : String(v.won),
                 value: `${v.game.name}\n배팅한 팀: ${v.team.name}\n배팅액: ${v.amount}`,
                 inline: true
             }
@@ -162,7 +168,22 @@ export class Bet implements ICommand {
         return record;
     }
 
-    private async findBettingRecord(playerId: string): Promise<any> {
-        throw Error("does not implemented!");
+    private async findBettingRecord(playerId: string, gameId: any): Promise<any> {
+        return await Player.findById(playerId).populate({
+            path: "history",
+            populate: [
+                { path: "game" },
+                { path: "team" }
+            ]
+        }).exec()
+        .then((documents) => {
+            if (documents === null) {
+                return [];
+            }
+
+            return documents.history.filter((v: any) => {
+                return String(v.game._id) === String(gameId);
+            });
+        })
     }
 }
