@@ -75,16 +75,30 @@ export class Bet implements ICommand {
             await interation.reply({ content: "존재하지 않는 팀입니다.", ephemeral: true });
             return;
         }
-    
-        await team.updateOne({ count: team.count + 1 });
-        const record = await Record.create({
-            game: openedGame._id,
-            team: team._id,
-            amount: bettingAmount,
-        });
-        await Player.updateOne({ _id: player._id }, 
-            { $push: { history: record }, amount: player.amount - bettingAmount }
-        );
+
+        let record = await this.findBettingRecord(player._id);
+        if (record !== null) {
+            const previousTeam = record.team.name;
+            const previousAmount = record.amount;
+            await record.updateOne({ team: team._id, amount: bettingAmount });
+            interation.reply(
+                {
+                    content: `배팅을 ${previousTeam}, ${previousAmount}원 -> ${team.name}, ${bettingAmount}원으로 변경하셨습니다.`,
+                    ephemeral: true
+                }
+            )
+        }
+        else {
+            await team.updateOne({ count: team.count + 1 });
+            record = await Record.create({
+                game: openedGame._id,
+                team: team._id,
+                amount: bettingAmount,
+            });
+            await Player.updateOne({ _id: player._id }, 
+                { $push: { history: record }, amount: player.amount - bettingAmount }
+            );
+        }
 
         player = await this.findPlayerById(userId);
         const avatar = (user.avatarURL() === null) ? undefined : user.avatarURL()?.toString();
@@ -146,5 +160,9 @@ export class Bet implements ICommand {
             }
         }).splice(-3);
         return record;
+    }
+
+    private async findBettingRecord(playerId: string): Promise<any> {
+        throw Error("does not implemented!");
     }
 }
