@@ -82,7 +82,7 @@ export class Bet implements ICommand {
             const previousTeam = record.team.name;
             const previousAmount = record.amount;
             await record.updateOne({ team: team._id, amount: bettingAmount });
-            await player.updateOne({ amount: player.amount - bettingAmount });
+            await player.updateOne({ amount: record.amount + player.amount - bettingAmount });
             await interation.reply(
                 {
                     content: `배팅을 ${previousTeam}, ${previousAmount}원 -> ${team.name}, ${bettingAmount}원으로 변경하셨습니다.`,
