@@ -41,6 +41,10 @@ export class Victory implements ICommand {
             // 현재 진행 중인 게임을 찾지 못함
             return;
         }
+        else if (currentGame.open === true) {
+            // 배팅 중인 게임
+            return;
+        }
 
         const winningTeam = interation.options.get("승리한팀")?.value as string;
         const allGameTeam = await this.findAllGameTeam(currentGame._id);
@@ -58,7 +62,7 @@ export class Victory implements ICommand {
     }
 
     private async findOpenedGame() {
-        return await Game.findOne({ open: true, finish: false });
+        return await Game.findOne({ finish: false });
     }
 
     private async findAllGameTeam(gameId: any) {
