@@ -55,7 +55,7 @@ export class Victory implements ICommand {
         }
 
         const bettingAmount = await this.findAllPlayers(currentGame._id, winningTeam);
-        await currentGame.updateOne({ finish: true });
+        // await currentGame.updateOne({ finish: true });
         const bettings = bettingAmount as Map<string, number>;
         const allAmount = Array.from(bettings.values()).reduce((prev, cur) => {
             return Number(prev) + Number(cur);
@@ -101,11 +101,16 @@ export class Victory implements ICommand {
                             this.calculateEachTeamBetting(gameId, players, 
                                         bettingAmount);
                             for (let player of players) {
-                                const gameRecord = this.findGameRecords(gameId, player.history)[0];
-                                if(gameRecord === undefined || gameRecord === null || gameRecord.index === -1) {
+                                const gameRecords = this.findGameRecords(gameId, player.history)
+                                                        .filter((v) => {
+                                                            return v.index !== -1
+                                });
+                                if (gameRecords.length === 0) {
+                                    // it means empty
                                     continue;
                                 }
-
+                                const gameRecord = gameRecords[0];
+                    
                                 const selfRecord = gameRecord.record as any;
                                 const selfTeam = selfRecord.team.name;
                                 if (winningTeam !== selfTeam) {
@@ -139,11 +144,14 @@ export class Victory implements ICommand {
                         });
     }
 
-    private calculateEachTeamBetting(gameId: number, players, bettingAmount: Map<string, number>) {
+    private calculateEachTeamBetting(gameId: string, players, bettingAmount: Map<string, number>) {
         for (let player of players) {
             const history = player.history;
-            const gameRecords = this.findGameRecords(gameId, history);
-            if (gameRecords.length === 0 || gameRecords[0].index === -1) {
+            const gameRecords = this.findGameRecords(gameId, history)
+                    .filter((v) => {
+                        return v.index !== -1
+            });
+            if (gameRecords.length === 0) {
                 // it means empty
                 continue;
             }
@@ -159,7 +167,7 @@ export class Victory implements ICommand {
         }
     }
 
-    private findGameRecords(gameId: number, history: Array<any>) {
+    private findGameRecords(gameId: any, history: Array<any>) {
         return history.map((v, i) => {
             if (String(v.game._id) === String(gameId)) {
                 return { index: i, record: v };
