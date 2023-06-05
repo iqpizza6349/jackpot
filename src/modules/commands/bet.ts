@@ -4,6 +4,7 @@ import { Game } from "../database/schemas/Game";
 import { Player } from "../database/schemas/Player";
 import { GameTeam } from "../database/schemas/GameTeam";
 import { Record } from "../database/schemas/Record";
+import { createEmbed } from "../../embed/bettingEmbed";
 
 export class Bet implements ICommand {
     cmd: boolean = true;
@@ -104,7 +105,7 @@ export class Bet implements ICommand {
 
         player = await this.findPlayerById(userId);
         const avatar = (user.avatarURL() === null) ? undefined : user.avatarURL()?.toString();
-        const embedProfile = this.createEmbed(user.username, avatar, player?.history, player?.amount);
+        const embedProfile = createEmbed(user.username, avatar, player?.history, player?.amount);
         if (interation.replied) {
             await interation.channel?.send({ embeds: [embedProfile] });
         }
@@ -129,44 +130,6 @@ export class Bet implements ICommand {
 
     private async findTeamByName(id: any, name: string) {
         return await GameTeam.findOne({ game: id, name });
-    }
-
-    private createEmbed(username: string, avatar?: string, history?: any[], money?: number) {
-        let embed = new EmbedBuilder().setColor(0x0099FF).setTitle("토토 프로필");
-        embed = this.createAuthor(embed, username, avatar)
-                    .setDescription(`${username}의 소지금과 토토 내역`)
-                    .addFields(
-                        { name: "소지금", value: `${money}` },
-                        { name: "\u200B", value: "\u200B" },
-                        { name: "가장 최근 토토 플레이", value: "\u200B" }
-        );
-        const record = this.createGameField(history);
-        for (let i = 0; i < record.length; i++) {
-            embed.addFields(record[i]);
-        }
-
-        return embed.setTimestamp();
-    }
-
-    private createAuthor(builder: EmbedBuilder, username: string, avatar?: string) {
-        if (avatar) {
-            builder.setAuthor({ name: username, iconURL: avatar });
-        }
-        return builder;
-    }
-
-    private createGameField(history?: any[]) {
-        if (history === undefined) {
-            return [];
-        }
-        const record = history.map((v) => {
-            return { 
-                name: (v.won === null) ? "아직 결과가 나오지 않았습니다." : String(v.won),
-                value: `${v.game.name}\n배팅한 팀: ${v.team.name}\n배팅액: ${v.amount}`,
-                inline: true
-            }
-        }).splice(-3);
-        return record;
     }
 
     private async findBettingRecord(playerId: string, gameId: any): Promise<any> {
