@@ -3,18 +3,23 @@ import { ICommand } from "./ICommand";
 
 export class Memory implements ICommand {
     cmd: boolean = true;
+
     name(): string {
         return "메모리";
     }
+
     description(): string {
         return "메모리 베타 테스트";
     }
+
     options(): any[] {
         return [];
     }
+
     permission(): bigint | undefined {
         return PermissionFlagsBits.Administrator;
     }
+    
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
         if (interation.commandName !== this.name()) {
             return;

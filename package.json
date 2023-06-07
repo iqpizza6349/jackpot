@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc --build && node dist/index.js && pause",
+    "start": "tsc --build && node dist/index.js --max-old-space-size=920 && pause",
     "build": "tsc --build",
     "clean": "tsc --build --clean"
   },
