@@ -1,5 +1,9 @@
 import { CommandInteraction, CacheType, ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
+import { Game } from "../database/schemas/Game";
+import { Player } from "../database/schemas/Player";
+import { Record } from "../database/schemas/Record";
+import { GameTeam } from "../database/schemas/GameTeam";
 
 /**
  * 모든 플레이어들의 소지금을 rollback 합니다.
@@ -22,7 +26,7 @@ export class RollBack implements ICommand {
             {
                 name: "롤백여부",
                 description: "true일 경우, 롤백을 진행합니다.",
-                type: ApplicationCommandOptionType.String,
+                type: ApplicationCommandOptionType.Boolean,
                 required: true
             },
         ]
@@ -33,6 +37,20 @@ export class RollBack implements ICommand {
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
-        throw new Error("Method not implemented.");
+        if (interation.commandName !== this.name()) {
+            return;
+        }
+
+        const isTrue = interation.options.get("롤백여부")?.value;
+        if (!isTrue) {
+            await interation.reply({content: "롤백을 하지 않았습니다! \uD83D\uDE05", ephemeral: true});
+            return;
+        }
+
+        await Record.deleteMany({});
+        await GameTeam.deleteMany({});
+        await Game.deleteMany({});
+        await Player.updateMany({}, { $set: { amount: 1000, history: [] } });
+        await interation.reply("롤백이 성공적으로 이루어졌습니다! \uD83D\uDE28");
     }
 }
