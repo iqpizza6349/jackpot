@@ -1,4 +1,4 @@
-import { CommandInteraction, CacheType } from "discord.js";
+import { CommandInteraction, CacheType, ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { ICommand } from "./ICommand";
 
 /**
@@ -10,19 +10,26 @@ export class RollBack implements ICommand {
     cmd: boolean = true;
 
     name(): string {
-        throw new Error("Method not implemented.");
+        return "rollback";
     }
 
     description(): string {
-        throw new Error("Method not implemented.");
+        return "모든 플레이어들의 소지금을 초기 상태로 되돌리며, 모든 토토들의 정보와 기록들을 말소시킵니다.";
     }
 
     options(): any[] {
-        throw new Error("Method not implemented.");
+        return [
+            {
+                name: "롤백여부",
+                description: "true일 경우, 롤백을 진행합니다.",
+                type: ApplicationCommandOptionType.String,
+                required: true
+            },
+        ]
     }
 
     permission(): bigint | undefined {
-        throw new Error("Method not implemented.");
+        return PermissionFlagsBits.Administrator;
     }
 
     async action(interation: CommandInteraction<CacheType>): Promise<void> {
