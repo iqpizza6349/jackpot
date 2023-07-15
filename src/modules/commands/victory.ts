@@ -55,7 +55,7 @@ export class Victory implements ICommand {
         }
 
         const bettingAmount = await this.findAllPlayers(currentGame._id, winningTeam);
-        // await currentGame.updateOne({ finish: true });
+        await currentGame.updateOne({ finish: true });
         const bettings = bettingAmount as Map<string, number>;
         const allAmount = Array.from(bettings.values()).reduce((prev, cur) => {
             return Number(prev) + Number(cur);
@@ -133,7 +133,7 @@ export class Victory implements ICommand {
                                     earnMoney += bettingAmount.get(other) * selfStake;
                                 }
                                 const amount = selfBet + earnMoney;
-                                player.amount = player.amount + amount;
+                                player.amount = Number(player.amount + amount);
                                 await player.save();
                                 await Record.updateOne(
                                     { _id: selfRecord._id },
@@ -159,10 +159,11 @@ export class Victory implements ICommand {
             const playerBetting = gameRecords[0].record;
             const key = playerBetting.team.name;
             if (bettingAmount.has(key)) {
-                bettingAmount.set(key, playerBetting.get(key) + playerBetting.amount);
+                let prev = Number(bettingAmount.get(key));
+                bettingAmount.set(key, (prev + Number(playerBetting.amount)));
             }
             else {
-                bettingAmount.set(key, playerBetting.amount);
+                bettingAmount.set(key, Number(playerBetting.amount));
             }
         }
     }
