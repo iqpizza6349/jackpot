@@ -16,7 +16,7 @@ interface RecordModel extends Model<RecordSchema> {}
 const recordSchema = new mongoose.Schema<RecordSchema, RecordModel>({
     game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required: true },
-    amount: { type: Number, required: true },
+    amount: { type: Number, required: true, default: 0 },
     won: { type: Boolean, default: null }
 });
 const Record = mongoose.model<RecordSchema, RecordModel>("Record", recordSchema);
